@@ -8,7 +8,7 @@ from .models import DiaryPost
 class DiaryPostForm(forms.ModelForm):
     class Meta:
         model = DiaryPost
-        fields = ['title', 'content']
+        fields = ['title', 'content','preview', 'is_published']
 
     def __init__(self, *args, **kwargs):
         super(DiaryPostForm, self).__init__(*args, **kwargs)
@@ -22,6 +22,16 @@ class DiaryPostForm(forms.ModelForm):
             'class': 'form-control',  # Добавление CSS-класса для стилизации поля
             'placeholder': 'Содержимое'  # Текст подсказки внутри поля
         })
+
+        self.fields['preview'].widget.attrs.update({
+            'class': 'form-control',  # Добавление CSS-класса для стилизации поля
+            'placeholder': 'Выберите изображение'  # Текст подсказки внутри поля
+        })
+
+        self.fields['is_published'].widget.attrs.update({
+            'class': 'form-check-input',  # Используем класс для стилизации чекбокса Bootstrap
+        })
+
 
 
 class DiaryPostModeratorForm(forms.ModelForm):

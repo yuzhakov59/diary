@@ -9,12 +9,30 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.db import models
+from django.db.models import Q
 from diary.form import DiaryPostForm
 from diary.models import DiaryPost
 
 
 class DiaryPostListView(ListView):
     model = DiaryPost
+
+    def get_queryset(self):
+        """
+        Показываем записи текущего пользователя ИЛИ записи, которые опубликованы.
+        """
+        user = self.request.user
+        if user.is_authenticated:
+            # Фильтруем записи: владелец равен текущему пользователю ИЛИ запись опубликована.
+            # Используем models.Q для объединения условий OR.
+            queryset = super().get_queryset().filter(
+                models.Q(owner=user) | models.Q(is_published=True)
+            )
+        else:
+            # Если пользователь не авторизован, показываем только опубликованные записи.
+            queryset = super().get_queryset().filter(is_published=True)
+        return queryset
 
     def get_context_data(self, **kwargs):
         """
@@ -77,3 +95,25 @@ def contacts(request):
         message = request.POST.get("message")
         return HttpResponse("Данные отправлены!")
     return render(request,'diary/contacts.html' )
+
+
+def search_view(request):
+    """
+    Обрабатывает GET-запрос с параметром поиска 'q'
+    и возвращает отфильтрованный список записей дневника.
+    """
+    query = request.GET.get('q', '')
+    articles = DiaryPost.objects.all()
+
+    if query:
+        articles = articles.filter(
+            models.Q(title__icontains=query) | models.Q(content__icontains=query)
+        )
+
+    context = {
+        'articles': articles,
+        'query': query
+    }
+    return render(request, 'diary/search_results.html', context)
+
+
