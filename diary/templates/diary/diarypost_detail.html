@@ -1,0 +1,24 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Описание{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row text-center">
+        <div class="col-12">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <h7 class="card-title pricing-card-title">{{ object.content }}</h7>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li>- {{ object.created_at }}</li>
+                    </ul>
+                    <a class="p-2 btn btn-lg btn-block btn-outline-primary" href="{% url 'diary:diary_list' %}">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
