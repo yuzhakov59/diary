@@ -1,20 +1,25 @@
 {% extends 'diary/base.html' %}
-{% load my_tags %}
 {% block title %}Главная страница{% endblock %}
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container text-center mb-4">
-        <h3>Категории:</h3>
-        <div class="btn-group" role="group" aria-label="Категории">
-
+        <div>
         </div>
     </div>
+    <div class="container mb-4">
+    <form method="get" action="{% url 'diary:search' %}">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Поиск по заголовку или содержанию..." aria-label="Поиск" aria-describedby="search-addon" value="{{ query|default:'' }}"> {# Отображаем предыдущий запрос #}
+            <button class="btn btn-outline-secondary" type="submit">Найти</button>
+        </div>
+    </form>
+</div>
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for cata in object_list %}
             <div class="col">
                 <div class="card shadow-sm">
-                    <img src="{{ cata.preview | media_filter }}" class="card-img-top" alt="Изображение товара" style="height: 200px; object-fit: cover;">
+                    <img src="{{ cata.preview.url }}" class="card-img-top" alt="Изображение" style="height: 200px; object-fit: cover;">
                     <h3 class="my-0 font-weight-normal">{{ cata.title }}</h3>
                     <div class="card-body">
                         <h4 class="card-title pricing-card-title">{{ cata.created_at }}</h4>

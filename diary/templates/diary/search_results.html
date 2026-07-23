@@ -1,0 +1,46 @@
+{% extends 'diary/base.html' %}
+{% block title %}Результаты поиска{% endblock %}
+{% block content %}
+<div class="container mb-4">
+    <form method="get" action="{% url 'diary:search' %}">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Введите поисковый запрос..." value="{{ query|default:'' }}">
+            <button type="submit" class="btn btn-outline-secondary">Поиск</button>
+        </div>
+    </form>
+</div>
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <h1>Результаты поиска для: "{{ query }}"</h1>
+        {% if articles %}
+            <p>Найдено записей: <strong>{{ articles.count }}</strong></p>
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% for cata in articles %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img src="{{ cata.preview.url }}" class="card-img-top" alt="Изображение" style="height: 200px; object-fit: cover;">
+                             <h3 class="my-0 font-weight-normal">{{ cata.title }}</h3>
+                            <div class="card-body">
+                                <h4 class="card-title pricing-card-title">{{ cata.created_at }}</h4>
+                                 <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                                {% if perms.diary.can_unpublish_product or user == cata.owner %}
+                                    <a class="p-1 btn btn-lg btn-block btn-outline-primary" href="{% url 'diary:diary_detail' cata.pk %}" role="button">Описание</a>
+                                    <a class="p-1 btn btn-lg btn-block btn-outline-primary" href="{% url 'diary:diary_update' cata.pk %}" role="button">Редактировать</a>
+                                    <a class="p-1 btn btn-lg btn-block btn-outline-primary" href="{% url 'diary:diary_delete' cata.pk %}" role="button">Удалить</a>
+                                {% else %}
+                                    <a class="p-1 btn btn-lg btn-block btn-outline-primary" href="{% url 'diary:diary_detail' cata.pk %}" role="button">Описание</a>
+                                {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <p>По запросу "{{ query }}" ничего не найдено.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

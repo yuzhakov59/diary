@@ -3,11 +3,12 @@ from django.db import models
 
 
 class User(AbstractUser):
-    username = None
+    username = models.CharField(max_length=35, verbose_name='Логин', blank=True, null=True, help_text="Введите логин")
     email = models.EmailField(unique=True, verbose_name="Email")
     phone = models.CharField(max_length=35, verbose_name='Телефон', blank=True, null=True, help_text="Введите номер телефона")
     country = models.CharField(max_length=50, verbose_name='Страна', blank=True, null=True, help_text="Введите страну")
     avatar = models.ImageField(upload_to="users/avatars/", verbose_name='Аватар', blank=True, null=True, help_text="Загрузите свой аватар")
+    token = models.CharField(max_length=32, verbose_name='Token', blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

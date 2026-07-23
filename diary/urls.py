@@ -1,5 +1,6 @@
 from django.urls import path
 
+from diary import views
 from diary.views import DiaryPostListView, DiaryPostDetailView, DiaryPostCreateView, DiaryPostUpdateView, \
     DiaryPostDeleteView, contacts
 
@@ -12,4 +13,5 @@ urlpatterns = [
     path('diary/<int:pk>/update/', DiaryPostUpdateView.as_view(), name='diary_update'),
     path('diary/<int:pk>/delete/', DiaryPostDeleteView.as_view(), name='diary_delete'),
     path('contacts/', contacts, name='contacts'),
+    path('search/', views.search_view, name='search'),
 ]
